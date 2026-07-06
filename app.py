@@ -71,176 +71,197 @@ if agent_ready and "runner" not in st.session_state:
         session_service=st.session_state.session_service
     )
 
-# Inject custom CSS styles for bento card and SaaS look
+# Design system: Minimalism & Swiss Style (generated via ui-ux-pro-max)
+# Tokens: neutral slate structure, single blue accent, semantic green/red/amber,
+# Inter typography, 8px spacing rhythm, 1px borders over shadows.
 css_styles = """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+    --color-primary: #475569;
+    --color-secondary: #64748B;
+    --color-accent: #2563EB;
+    --color-background: #F8FAFC;
+    --color-surface: #FFFFFF;
+    --color-foreground: #1E293B;
+    --color-muted: #EAEFF3;
+    --color-border: #E2E8F0;
+    --color-success: #059669;
+    --color-success-bg: #ECFDF5;
+    --color-destructive: #DC2626;
+    --color-destructive-bg: #FEF2F2;
+    --radius: 8px;
+    --radius-sm: 6px;
+}
 
 html, body, [data-testid="stAppViewContainer"] {
     font-family: 'Inter', sans-serif;
-    background-color: #F8FAFC !important;
+    background-color: var(--color-background) !important;
+    color: var(--color-foreground);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', sans-serif !important;
+    color: var(--color-foreground) !important;
+    letter-spacing: -0.01em;
 }
 
 [data-testid="stSidebar"] {
-    background-color: #FFFFFF !important;
-    border-right: 1px solid #E2E8F0 !important;
+    background-color: var(--color-surface) !important;
+    border-right: 1px solid var(--color-border) !important;
 }
 
 div[data-testid="stTabBar"] {
-    border-bottom: 2px solid #E2E8F0;
-    margin-bottom: 20px;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 24px;
 }
 button[data-baseweb="tab"] {
     font-weight: 500;
-    color: #475569;
+    color: var(--color-secondary);
+}
+button[data-baseweb="tab"]:hover {
+    color: var(--color-foreground);
 }
 button[data-baseweb="tab"][aria-selected="true"] {
-    color: #4F46E5 !important;
-    border-bottom-color: #4F46E5 !important;
+    color: var(--color-accent) !important;
+    border-bottom-color: var(--color-accent) !important;
+    font-weight: 600;
+}
+
+.stButton button {
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
 }
 
 .bento-card {
-    background-color: #FFFFFF;
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid #E2E8F0;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.025);
-    margin-bottom: 1.5rem;
+    background-color: var(--color-surface);
+    border-radius: var(--radius);
+    padding: 24px;
+    border: 1px solid var(--color-border);
+    margin-bottom: 16px;
 }
 
 .bento-header {
-    font-size: 1.1rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #0F172A;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #F1F5F9;
-    padding-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    color: var(--color-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 16px;
 }
 
 .bento-content {
-    color: #334155;
+    color: var(--color-foreground);
     line-height: 1.6;
+}
+
+.kicker {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-secondary);
+    display: block;
+    margin-bottom: 4px;
 }
 
 .badge {
     display: inline-block;
-    padding: 0.25rem 0.5rem;
+    padding: 2px 8px;
     font-size: 0.75rem;
     font-weight: 500;
-    border-radius: 6px;
-    background-color: #EEF2FF;
-    color: #4F46E5;
-    margin-right: 0.5rem;
-    border: 1px solid #E0E7FF;
+    border-radius: 999px;
+    background-color: #EFF6FF;
+    color: var(--color-accent);
+    margin-right: 8px;
+    border: 1px solid #DBEAFE;
 }
 
 .badge-sec {
-    background-color: #F0FDFA;
-    color: #0D9488;
-    border: 1px solid #CCFBF1;
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid #A7F3D0;
 }
 
 .badge-orange {
     background-color: #FFFBEB;
-    color: #D97706;
-    border: 1px solid #FEF3C7;
+    color: #B45309;
+    border: 1px solid #FDE68A;
 }
 
 .badge-gray {
     background-color: #F1F5F9;
-    color: #475569;
-    border: 1px solid #E2E8F0;
+    color: var(--color-primary);
+    border: 1px solid var(--color-border);
 }
 
-.status-bar-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 1.5rem 0;
-    padding: 1rem;
-    background-color: #FFFFFF;
-    border-radius: 8px;
-    border: 1px solid #E2E8F0;
+.app-header {
+    padding: 8px 0 24px 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 8px;
 }
-.status-step {
-    display: flex;
-    align-items: center;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: #94A3B8;
-}
-.status-step.active {
-    color: #4F46E5;
-}
-.status-step.completed {
-    color: #10B981;
-}
-.status-arrow {
-    color: #CBD5E1;
-    margin: 0 0.5rem;
-}
-
-.hero-container {
-    background: linear-gradient(135deg, #EEF2FF 0%, #F8FAFC 100%);
-    border-radius: 12px;
-    padding: 2rem;
-    border: 1px solid #E2E8F0;
-    margin-bottom: 2rem;
-}
-.hero-title {
-    font-size: 2.2rem;
+.app-title {
+    font-size: 1.75rem;
     font-weight: 700;
-    color: #0F172A;
-    margin-bottom: 0.5rem;
+    color: var(--color-foreground);
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
 }
-.hero-subtitle {
-    font-size: 1.1rem;
-    color: #475569;
-    margin-bottom: 1.5rem;
+.app-subtitle {
+    font-size: 1rem;
+    color: var(--color-secondary);
+    margin-bottom: 16px;
 }
 
 .hitl-banner {
-    background-color: #EEF2FF;
-    border: 1.5px solid #C7D2FE;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-accent);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin-top: 8px;
+    margin-bottom: 16px;
 }
 .hitl-title {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
-    color: #3730A3;
-    margin-bottom: 0.5rem;
+    color: var(--color-foreground);
+    margin-bottom: 4px;
 }
 .hitl-body {
-    font-size: 0.95rem;
-    color: #4F46E5;
-    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--color-secondary);
 }
 
 .corrected-box {
-    background-color: #ECFDF5;
-    border-left: 4px solid #10B981;
-    padding: 1rem;
-    border-radius: 4px;
-    font-size: 1.1rem;
+    background-color: var(--color-success-bg);
+    border-left: 3px solid var(--color-success);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 1.05rem;
     font-weight: 600;
     color: #065F46;
-    margin-bottom: 1rem;
+    margin-bottom: 16px;
 }
 
 .original-box {
-    background-color: #F8FAFC;
-    border-left: 4px solid #94A3B8;
-    padding: 1rem;
-    border-radius: 4px;
+    background-color: var(--color-background);
+    border-left: 3px solid #CBD5E1;
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
     font-size: 1rem;
-    color: #334155;
-    margin-bottom: 1rem;
+    color: var(--color-foreground);
+    margin-bottom: 16px;
+}
+
+.explanation-box {
+    background-color: var(--color-muted);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    color: var(--color-foreground);
+    line-height: 1.7;
 }
 
 code, pre {
@@ -252,10 +273,14 @@ st.markdown(css_styles, unsafe_allow_html=True)
 
 # Sidebar Check
 st.sidebar.markdown("""
-<div style="text-align: center; margin-bottom: 1.5rem;">
-    <span style="font-size: 3rem;">🧠</span>
-    <h2 style="margin-top: 0.5rem; margin-bottom: 0; color: #0F172A;">Memory Agent</h2>
-    <span style="font-size: 0.85rem; color: #64748B;">English Learning Concierge</span>
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+    <div style="width: 40px; height: 40px; border-radius: 8px; background-color: #2563EB; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+    </div>
+    <div>
+        <div style="font-size: 1rem; font-weight: 700; color: #1E293B; letter-spacing: -0.01em;">Memory Agent</div>
+        <div style="font-size: 0.78rem; color: #64748B;">English learning companion</div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -264,30 +289,31 @@ if use_enterprise:
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT", "").strip('"\'')
     location = os.environ.get("GOOGLE_CLOUD_LOCATION")
     if not project_id or not location:
-        st.sidebar.warning("⚠️ Configuration Incomplete\nGOOGLE_CLOUD_PROJECT or GOOGLE_CLOUD_LOCATION is missing in enterprise mode.")
+        st.sidebar.warning("Configuration incomplete: GOOGLE_CLOUD_PROJECT or GOOGLE_CLOUD_LOCATION is missing in enterprise mode.")
     elif not agent_ready:
-        st.sidebar.error(f"⚠️ Initialization Error\nError initializing Google ADK: {agent_error}")
+        st.sidebar.error(f"Initialization error: {agent_error}")
     else:
-        st.sidebar.success("💼 Mode: Vertex AI Enterprise")
+        st.sidebar.success("✓ AI service connected")
 else:
     api_key = os.environ.get("GOOGLE_API_KEY")
     if not api_key:
-        st.sidebar.warning("⚠️ Configuration Incomplete\nGOOGLE_API_KEY is not set. Please check `.env`.")
+        st.sidebar.warning("Configuration incomplete: GOOGLE_API_KEY is not set. Please check `.env`.")
     elif not agent_ready:
-        st.sidebar.error(f"⚠️ Initialization Error\nError initializing Google ADK: {agent_error}")
+        st.sidebar.error(f"Initialization error: {agent_error}")
     else:
-        st.sidebar.success("🤖 Mode: Gemini Developer API")
+        st.sidebar.success("✓ AI service connected")
 
 
 # Privacy Reminder
 st.sidebar.markdown("""
 ---
-**🔒 Privacy Safeguard:**
-All inputs are scanned for sensitive info (PII) like phone numbers, emails, passwords, and ID numbers before saving to database.
+**Privacy safeguard**
+
+All inputs are scanned for sensitive info (phone numbers, emails, passwords, ID numbers) before anything is saved.
 """)
 
 # Demo Input Examples
-st.sidebar.markdown("### 💡 Try These Examples:")
+st.sidebar.markdown("**Try an example**")
 examples = [
     "I very like table tennis.",
     "I am interesting in learning Swedish.",
@@ -297,17 +323,17 @@ examples = [
 for ex in examples:
     st.sidebar.code(ex, language="text")
 
-# Header/Hero Section
+# Header Section
 hero_html = """
-<div class="hero-container">
-    <div class="hero-title">🧠 English Memory Agent</div>
-    <div class="hero-subtitle">Correct, rewrite, save, and review your personal English expressions.</div>
+<div class="app-header">
+    <div class="app-title">English Memory Agent</div>
+    <div class="app-subtitle">Correct, rewrite, save, and review your personal English expressions.</div>
     <div>
-        <span class="badge">ADK 2.0</span>
-        <span class="badge badge-sec">Human-in-the-Loop</span>
-        <span class="badge badge-orange">SQLite Database</span>
-        <span class="badge badge-gray">MCP Server</span>
-        <span class="badge">Privacy Scan</span>
+        <span class="badge badge-gray">Grammar Correction</span>
+        <span class="badge badge-gray">Natural Rewrites</span>
+        <span class="badge badge-gray">中文解析</span>
+        <span class="badge badge-gray">Memory Cards</span>
+        <span class="badge badge-gray">Review Quiz</span>
     </div>
 </div>
 """
@@ -315,70 +341,16 @@ st.markdown(hero_html, unsafe_allow_html=True)
 
 # Streamlit Tabs
 tab1, tab2, tab3, tab4 = st.tabs([
-    "✍️ Analyze English", 
-    "🔍 Search Memory", 
-    "🎯 Review Quiz", 
-    "📋 Recent Cards"
+    "Analyze",
+    "Search Memory",
+    "Review Quiz",
+    "Recent Cards"
 ])
 
 
 # ------------------ Helper functions for ADK running ------------------
 def safe_str(value):
     return "" if value is None else str(value)
-
-def render_workflow_status():
-    if st.session_state.approval_requested:
-        stage = "approval"
-    elif st.session_state.workflow_message:
-        if "saved" in st.session_state.workflow_message.lower() or "success" in st.session_state.workflow_message.lower():
-            stage = "completed"
-        else:
-            stage = "skipped"
-    else:
-        stage = "idle"
-
-    stages = [
-        ("Input", "📝"),
-        ("Analysis", "🧠"),
-        ("Privacy Scan", "🔒"),
-        ("Human Approval", "👉"),
-        ("Memory Save", "💾")
-    ]
-    
-    html = '<div class="status-bar-container">'
-    for i, (name, icon) in enumerate(stages):
-        step_class = "status-step"
-        if stage == "idle":
-            if i == 0:
-                step_class += " active"
-        elif stage == "approval":
-            if i < 3:
-                step_class += " completed"
-            elif i == 3:
-                step_class += " active"
-        elif stage == "completed":
-            step_class += " completed"
-        elif stage == "skipped":
-            if i < 4:
-                step_class += " completed"
-            else:
-                step_class += " active"
-                
-        status_icon = "⚪"
-        if "completed" in step_class:
-            status_icon = "🟢"
-        elif "active" in step_class:
-            status_icon = "🔵"
-            
-        if i == 4 and stage == "skipped":
-            status_icon = "⚪"
-            
-        html += f'<div class="{step_class}">{icon} {name} {status_icon}</div>'
-        if i < len(stages) - 1:
-            html += '<div class="status-arrow">──►</div>'
-    html += '</div>'
-    st.markdown(html, unsafe_allow_html=True)
-
 
 async def _iter_workflow_events(events_iter, allow_hitl: bool):
     import logging
@@ -523,20 +495,17 @@ def persist_card_from_analysis(analysis: dict, original_text: str) -> dict:
 
 # ------------------ Tab 1: Analyze English ------------------
 with tab1:
-    st.subheader("✍️ Analyze New English Input")
-    st.write("Enter an English sentence. The ADK 2.0 Graph Workflow will verify privacy, correct errors, translate explanation to Chinese, and present a card preview for your approval before saving.")
-    
-    # Render progress bar
-    render_workflow_status()
-    
+    st.subheader("Analyze English input")
+    st.write("Enter an English sentence or word. It will be checked and corrected, rewritten in natural and formal styles, and explained in Chinese — then you decide whether to save it as a memory card.")
+
     user_input = st.text_area(
-        "Enter English Sentence:", 
-        height=80, 
+        "English sentence or word",
+        height=80,
         placeholder="e.g. He go to school yesterday and meet his friend...",
         key="user_input_field"
     )
-    
-    if st.button("Run AI Analysis", key="btn_analyze", use_container_width=True):
+
+    if st.button("Analyze", key="btn_analyze", type="primary", use_container_width=True):
         if not use_enterprise and not api_key:
             st.error("Missing GOOGLE_API_KEY in environment or .env file.")
         elif use_enterprise and (not os.environ.get("GOOGLE_CLOUD_PROJECT") or not os.environ.get("GOOGLE_CLOUD_LOCATION")):
@@ -546,7 +515,7 @@ with tab1:
         elif not user_input.strip():
             st.warning("Please enter some text first.")
         else:
-            with st.spinner("Executing ADK 2.0 Workflow..."):
+            with st.spinner("Analyzing your English..."):
                 # Clear old state
                 st.session_state.analysis_result = None
                 st.session_state.privacy_results = None
@@ -569,16 +538,22 @@ with tab1:
                     st.session_state.workflow_message = res.get("message")
                     st.session_state.privacy_results = privacy_scan(user_input)
                 elif res.get("status") == "error":
-                    st.error(f"Workflow execution error: {res.get('message')}")
+                    st.error(f"Analysis failed: {res.get('message')}")
                     
     # Display results if available
     if st.session_state.analysis_result or st.session_state.workflow_message:
         p_res = st.session_state.privacy_results
         
-        st.markdown("### 📊 Analysis Results")
+        st.markdown("### Analysis results")
         
         if st.session_state.workflow_message:
-            st.markdown(f'<div class="bento-card" style="border-left: 4px solid #10B981; background-color: #ECFDF5;"><div class="bento-content" style="color: #065F46; font-weight: 500;">{st.session_state.workflow_message}</div></div>', unsafe_allow_html=True)
+            msg = st.session_state.workflow_message
+            if "saved successfully" in msg.lower():
+                st.success(msg)
+            elif msg.lower().startswith("failed"):
+                st.error(msg)
+            else:
+                st.info(msg)
             
         if st.session_state.analysis_result:
             res = st.session_state.analysis_result
@@ -592,7 +567,7 @@ with tab1:
                 # 1. Metadata Card
                 details_html = f"""
                 <div class="bento-card">
-                    <div class="bento-header">📊 Card Metadata</div>
+                    <div class="bento-header">Card details</div>
                     <div class="bento-content">
                         <p><strong>Card Type:</strong> <span class="badge">{card_type_display}</span></p>
                 """
@@ -633,11 +608,11 @@ with tab1:
                     corrected = res.get('corrected_version') or "No correction needed"
                     correction_html = f"""
                     <div class="bento-card">
-                        <div class="bento-header">🔧 Correction</div>
+                        <div class="bento-header">Correction</div>
                         <div class="bento-content">
-                            <p style="margin-bottom: 0.5rem; font-size: 0.9rem; color: #64748B;">Original Input:</p>
+                            <span class="kicker">Original input</span>
                             <div class="original-box">{safe_str(st.session_state.original_text)}</div>
-                            <p style="margin-bottom: 0.5rem; font-size: 0.9rem; color: #64748B;">Corrected Version:</p>
+                            <span class="kicker">Corrected version</span>
                             <div class="corrected-box">{safe_str(corrected)}</div>
                         </div>
                     </div>
@@ -645,9 +620,9 @@ with tab1:
                 else:
                     correction_html = f"""
                     <div class="bento-card">
-                        <div class="bento-header">📝 Input Expression</div>
+                        <div class="bento-header">Input expression</div>
                         <div class="bento-content">
-                            <div class="original-box" style="border-left-color: #4F46E5; font-size: 1.1rem; font-weight: 500;">{safe_str(st.session_state.original_text)}</div>
+                            <div class="original-box" style="border-left-color: #2563EB; font-size: 1.05rem; font-weight: 500;">{safe_str(st.session_state.original_text)}</div>
                         </div>
                     </div>
                     """
@@ -657,10 +632,8 @@ with tab1:
                 explanation = res.get("chinese_explanation") or "无解析内容。"
                 explanation_html = f"""
                 <div class="bento-card">
-                    <div class="bento-header">💡 Chinese Explanation / 中文解析</div>
-                    <div class="bento-content" style="font-size: 1rem; border-left: 4px solid #0D9488; padding-left: 1rem; background-color: #F0FDFA; border-radius: 4px; padding-top: 0.75rem; padding-bottom: 0.75rem;">
-                        {explanation}
-                    </div>
+                    <div class="bento-header">中文解析 · Chinese explanation</div>
+                    <div class="bento-content explanation-box">{explanation}</div>
                 </div>
                 """
                 st.markdown(explanation_html, unsafe_allow_html=True)
@@ -673,15 +646,15 @@ with tab1:
 
                 rewrites_html = f"""
                 <div class="bento-card">
-                    <div class="bento-header">✨ {header_text}</div>
+                    <div class="bento-header">{header_text}</div>
                     <div class="bento-content">
-                        <div style="margin-bottom: 1rem;">
-                            <span style="font-size: 0.85rem; font-weight: 600; color: #0D9488; display: block;">🗣️ NATURAL (CONVERSATIONAL)</span>
-                            <span style="font-size: 1.05rem; color: #0F172A; font-weight: 500;">{natural}</span>
+                        <div style="margin-bottom: 16px;">
+                            <span class="kicker" style="color: #2563EB;">Natural · Conversational</span>
+                            <span style="font-size: 1.05rem; color: #1E293B; font-weight: 500;">{natural}</span>
                         </div>
                         <div>
-                            <span style="font-size: 0.85rem; font-weight: 600; color: #D97706; display: block;">💼 FORMAL (PROFESSIONAL)</span>
-                            <span style="font-size: 1.05rem; color: #0F172A; font-weight: 500;">{formal}</span>
+                            <span class="kicker">Formal · Professional</span>
+                            <span style="font-size: 1.05rem; color: #1E293B; font-weight: 500;">{formal}</span>
                         </div>
                     </div>
                 </div>
@@ -706,35 +679,34 @@ with tab1:
                         
                     privacy_html = f"""
                     <div class="bento-card">
-                        <div class="bento-header">🔒 Privacy Scan</div>
+                        <div class="bento-header">Privacy scan</div>
                         <div class="bento-content">
-                            <div style="background-color: {bg_color}; border: 1px solid {border_color}; border-radius: 6px; padding: 0.75rem; color: {text_color}; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                                <span style="font-size: 1.2rem;">{"✓" if safe else "⚠"}</span> {status_text}
-                            </div>
-                            {risks_html}
+                            <div style="background-color: {bg_color}; border: 1px solid {border_color}; border-radius: 6px; padding: 12px; color: {text_color}; font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="font-weight: 700;">{"✓" if safe else "!"}</span> {status_text}
+                            </div>{risks_html}
                         </div>
                     </div>
                     """
                     st.markdown(privacy_html, unsafe_allow_html=True)
                     
-                # 6. JSON Card Preview
-                st.markdown('<div class="bento-card" style="margin-bottom: 0.5rem;"><div class="bento-header">💾 Memory Card JSON Preview</div></div>', unsafe_allow_html=True)
-                st.json(res)
+                # 6. Raw card data (developer view, collapsed by default)
+                with st.expander("Raw card data (JSON)", expanded=False):
+                    st.json(res)
                 
             # 2. HITL Approval Step
             st.markdown("---")
             if st.session_state.approval_requested:
                 banner_html = """
                 <div class="hitl-banner">
-                    <div class="hitl-title">👉 Human-in-the-Loop Confirmation Required</div>
-                    <div class="hitl-body">Do you want to save this generated memory card to your personal database? You can inspect the results above before confirming.</div>
+                    <div class="hitl-title">Save this memory card?</div>
+                    <div class="hitl-body">Review the analysis above, then save this card to your collection — or discard it.</div>
                 </div>
                 """
                 st.markdown(banner_html, unsafe_allow_html=True)
                 
                 col_yes, col_no = st.columns([1, 1])
                 with col_yes:
-                    if st.button("Confirm Save 💾", key="btn_confirm_yes", use_container_width=True):
+                    if st.button("Save card", key="btn_confirm_yes", type="primary", use_container_width=True):
                         with st.spinner("Saving card..."):
                             save_res = persist_card_from_analysis(
                                 st.session_state.analysis_result,
@@ -742,18 +714,18 @@ with tab1:
                             )
                         if save_res.get("status") == "success":
                             st.session_state.workflow_message = (
-                                f"✅ Card saved successfully! ID: {save_res.get('card_id')}"
+                                f"Card saved successfully (ID {save_res.get('card_id')})."
                             )
                         else:
                             st.session_state.workflow_message = (
-                                f"❌ Failed to save card: {save_res.get('message')}"
+                                f"Failed to save card: {save_res.get('message')}"
                             )
                         st.session_state.analysis_result = None
                         st.session_state.approval_requested = False
                         st.rerun()
                 with col_no:
-                    if st.button("Discard Card 🗑️", key="btn_confirm_no", use_container_width=True):
-                        st.session_state.workflow_message = "Saving skipped by user."
+                    if st.button("Discard", key="btn_confirm_no", use_container_width=True):
+                        st.session_state.workflow_message = "Card discarded — nothing was saved."
                         st.session_state.analysis_result = None
                         st.session_state.approval_requested = False
                         st.rerun()
@@ -761,77 +733,74 @@ with tab1:
 
 # ------------------ Tab 2: Search Memory ------------------
 with tab2:
-    st.subheader("🔍 Search Memory Database")
+    st.subheader("Search memory")
     st.write("Find saved expressions and errors by typing keywords in English or Chinese, tags, scenarios, or error types.")
-    
-    search_query = st.text_input("Enter Search Term:", placeholder="e.g. bullet, Tense, business...")
-    
+
+    search_query = st.text_input("Search term", placeholder="e.g. bullet, tense, business...")
+
     if search_query:
         results = search_cards(search_query)
     else:
         results = list_recent_cards(limit=20)
-        
-    st.write(f"Showing {len(results)} matching cards.")
-    
+
+    st.caption(f"{len(results)} matching cards")
+
     for c in results:
         raw_ctype = c.get("card_type", "expression_card")
         ctype = raw_ctype.replace('_', ' ').title()
         orig = safe_str(c.get("original_input"))
         c_id = c.get("id")
-        
+
         with st.container(border=True):
             col_type, col_date = st.columns([3, 1])
             with col_type:
-                st.markdown(f"### 🏷️ ID {c_id} — **{ctype}**")
+                st.markdown(f"<span class='badge'>{ctype}</span> <span style='color: #64748B; font-size: 0.85rem;'>ID {c_id}</span>", unsafe_allow_html=True)
             with col_date:
-                st.markdown(f"<span style='color: #64748B; font-size: 0.85rem; float: right;'>📅 {c.get('created_at')}</span>", unsafe_allow_html=True)
-                
-            st.markdown(f"**Original Input / 输入原句:**")
-            st.info(orig)
-            
+                st.markdown(f"<span style='color: #64748B; font-size: 0.85rem; float: right;'>{c.get('created_at')}</span>", unsafe_allow_html=True)
+
+            st.markdown(f"<span class='kicker'>Original input · 输入原句</span><div class='original-box'>{orig}</div>", unsafe_allow_html=True)
+
             if raw_ctype == "error_card":
                 corrected = c.get('corrected_version')
                 if corrected:
-                    st.markdown(f"**Corrected Version / 修改后:** :green[**{corrected}**]")
+                    st.markdown(f"<span class='kicker'>Corrected · 修改后</span><div class='corrected-box'>{corrected}</div>", unsafe_allow_html=True)
                 err_type = c.get('error_type')
                 if err_type:
-                    st.markdown(f"**Error Type / 错误类型:** `<span class='badge badge-orange'>{err_type}</span>`", unsafe_allow_html=True)
+                    st.markdown(f"**Error type / 错误类型:** <span class='badge badge-orange'>{err_type}</span>", unsafe_allow_html=True)
             elif raw_ctype == "word_card":
                 key_expr = c.get('key_expression') or orig
-                st.markdown(f"**Word / 单词:** `**{key_expr}**`")
+                st.markdown(f"**Word / 单词:** `{key_expr}`")
                 pos = c.get('part_of_speech')
                 if pos:
-                    st.markdown(f"**Part of Speech / 词性:** `{pos}`")
+                    st.markdown(f"**Part of speech / 词性:** {pos}")
                 definition = c.get('definition')
                 if definition:
-                    st.markdown(f"**English Definition / 英文释义:** *{definition}*")
+                    st.markdown(f"**Definition / 英文释义:** *{definition}*")
             else:
                 key_expr = c.get('key_expression')
                 if key_expr:
-                    st.markdown(f"**Key Expression / 核心表达:** `**{key_expr}**`")
-                    
-            st.markdown(f"**Chinese Explanation / 中文解析:**")
-            st.markdown(f"<div style='border-left: 4px solid #0D9488; padding-left: 1rem; color: #134E4A; background-color: #F0FDFA; padding-top: 0.5rem; padding-bottom: 0.5rem; border-radius: 4px;'>{c.get('chinese_explanation')}</div>", unsafe_allow_html=True)
-            
-            st.markdown("---")
-            
+                    st.markdown(f"**Key expression / 核心表达:** `{key_expr}`")
+
+            st.markdown(f"<span class='kicker'>中文解析 · Chinese explanation</span><div class='explanation-box'>{c.get('chinese_explanation')}</div>", unsafe_allow_html=True)
+            st.write("")
+
             col_rew1, col_rew2 = st.columns(2)
             with col_rew1:
-                st.markdown(f"🗣️ **Natural (Conversational):**\n{c.get('natural_version')}")
+                st.markdown(f"<span class='kicker' style='color: #2563EB;'>Natural · Conversational</span>{safe_str(c.get('natural_version'))}", unsafe_allow_html=True)
             with col_rew2:
-                st.markdown(f"💼 **Formal (Professional):**\n{c.get('formal_version')}")
-                
-            st.markdown(f"**Scenario / 场景:** `{c.get('scenario')}` | **Tags / 标签:** `{c.get('tags')}`")
+                st.markdown(f"<span class='kicker'>Formal · Professional</span>{safe_str(c.get('formal_version'))}", unsafe_allow_html=True)
+
+            st.caption(f"Scenario: {c.get('scenario')} · Tags: {c.get('tags')}")
 
 
 # ------------------ Tab 3: Review Quiz ------------------
 with tab3:
-    st.subheader("🎯 English Memory Review Quiz")
+    st.subheader("Review quiz")
     st.write("Generate interactive quizzes from recently saved memory cards to test your knowledge.")
-    
-    quiz_limit = st.slider("Number of quiz questions:", min_value=1, max_value=10, value=3)
-    
-    if st.button("Generate Quiz", key="btn_gen_quiz", use_container_width=True):
+
+    quiz_limit = st.slider("Number of quiz questions", min_value=1, max_value=10, value=3)
+
+    if st.button("Generate quiz", key="btn_gen_quiz", type="primary", use_container_width=True):
         recent = list_recent_cards(limit=50)
         if not recent:
             st.warning("No cards found in the database. Please add cards in the 'Analyze English' tab first!")
@@ -847,67 +816,67 @@ with tab3:
         st.write("---")
         for i, q in enumerate(st.session_state.quiz_questions):
             with st.container(border=True):
-                st.markdown(f"### 📝 Question {i+1} <span style='font-size: 0.9rem; color: #64748B;'>({q['question_type'].replace('_', ' ').title()})</span>", unsafe_allow_html=True)
-                st.markdown(f"**Question:** {q['question_text']}")
-                
+                st.markdown(f"**Question {i+1}** <span style='font-size: 0.85rem; color: #64748B;'>· {q['question_type'].replace('_', ' ').title()}</span>", unsafe_allow_html=True)
+                st.markdown(q['question_text'])
+
                 if q.get("options"):
-                    st.markdown("**Options:**")
                     for opt in q["options"]:
                         st.markdown(f"- {opt}")
-                
+
                 ans_key = f"q_{q['card_id']}_{i}"
                 st.session_state.quiz_answers[ans_key] = st.text_input(
-                    "Your Answer:",
+                    "Your answer",
                     key=ans_key,
                     placeholder="Type your answer (or letter choice A/B/C)..."
                 )
                 st.write("")
-            
-        if st.button("Submit Answers", key="btn_submit_answers", use_container_width=True):
+
+        if st.button("Submit answers", key="btn_submit_answers", type="primary", use_container_width=True):
             st.session_state.quiz_submitted = True
             st.rerun()
             
         if st.session_state.quiz_submitted:
-            st.markdown("### 📊 Quiz Results & Feedback")
+            st.markdown("### Quiz results")
             for i, q in enumerate(st.session_state.quiz_questions):
                 with st.container(border=True):
-                    st.markdown(f"#### Question {i+1} Review")
+                    st.markdown(f"**Question {i+1} review**")
                     ans_key = f"q_{q['card_id']}_{i}"
                     user_ans = st.session_state.quiz_answers.get(ans_key, "")
-                    
+
                     is_correct = user_ans.strip().lower() == q['correct_answer'].strip().lower()
-                    
+
                     if is_correct:
-                        st.success("🎉 Correct!")
+                        st.success("Correct")
                     else:
-                        st.error("❌ Needs practice")
-                        
-                    st.write(f"**Your Answer:** `{user_ans}`")
-                    st.write(f"**Reference Answer:** :green[`{q['correct_answer']}`]")
-                    st.markdown(f"**Explanations/Context:**\n{q['explanation']}")
+                        st.error("Not quite — review the explanation below")
+
+                    st.write(f"**Your answer:** {user_ans}")
+                    st.write(f"**Reference answer:** :green[{q['correct_answer']}]")
+                    st.markdown(f"**Explanation:**\n{q['explanation']}")
 
 
 # ------------------ Tab 4: Recent Cards ------------------
 with tab4:
-    st.subheader("📋 Recent Saved Cards")
-    st.write("Review recently saved memory cards or delete entries by ID.")
-    
+    st.subheader("Recent cards")
+    st.write("Review recently saved memory cards or delete entries.")
+
     recent_list = list_recent_cards(limit=10)
-    
+
     if not recent_list:
-        st.info("No saved cards found.")
+        st.info("No saved cards yet. Analyze a sentence in the Analyze tab to create your first card.")
     else:
         for c in recent_list:
             c_id = c.get("id")
             c_type = c.get("card_type", "").replace('_', ' ').title()
             orig = c.get("original_input", "")
-            
+            preview = orig if len(orig) <= 120 else orig[:120] + "…"
+
             with st.container(border=True):
                 col_info, col_action = st.columns([6, 1])
                 with col_info:
-                    st.markdown(f"**ID {c_id}** | **[{c_type}]** : `{orig[:120]}...`")
+                    st.markdown(f"<span class='badge'>{c_type}</span> <span style='color: #64748B; font-size: 0.85rem;'>ID {c_id}</span><br>{preview}", unsafe_allow_html=True)
                 with col_action:
-                    if st.button("Delete 🗑️", key=f"btn_del_recent_{c_id}", use_container_width=True):
+                    if st.button("Delete", key=f"btn_del_recent_{c_id}", use_container_width=True):
                         del_res = delete_card(c_id)
                         if del_res["status"] == "success":
                             st.success("Deleted!")
