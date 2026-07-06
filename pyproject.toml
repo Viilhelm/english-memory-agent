@@ -3,7 +3,7 @@ name = "english-memory-agent"
 version = "0.1.0"
 description = "A personal English learning concierge agent"
 authors = [
-    {name = "Kaggle Capstone Student", email = "student@example.com"},
+    {name = "Viilhelm"},
 ]
 dependencies = [
     "google-adk[gcp]>=2.0.0,<3.0.0",
