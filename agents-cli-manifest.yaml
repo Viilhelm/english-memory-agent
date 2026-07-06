@@ -1,0 +1,13 @@
+name: english-memory-agent
+acli_version: 0.5.0
+agent_directory: english_memory_agent
+region: us-east1
+base_template: adk
+generated_at: '2026-07-01T22:48:50+00:00'
+language: python
+create_params:
+  deployment_target: agent_runtime
+  cicd_runner: skip
+  include_data_ingestion: false
+  datastore: none
+  agent_guidance_filename: GEMINI.md

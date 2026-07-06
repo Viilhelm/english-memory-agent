@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Config & local secrets
+.env
+.env.local
+
+# Databases & local stores
+*.db
+*.sqlite
+database/*.db
+app/database/*.db
+_adk_starter_reference/
+adk-ref/
+
+# Streamlit config
+.streamlit/
+
+# Testing & notebooks cache
+.pytest_cache/
+.ipynb_checkpoints/
+
+# English Memory Agent local database and requirements cache
+english_memory_agent/database/*.db
+**/.requirements.txt
+
+# Assistant and IDE config folders
+.claude/
