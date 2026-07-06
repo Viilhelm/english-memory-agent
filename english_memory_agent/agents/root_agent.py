@@ -44,7 +44,7 @@ correction_agent = Agent(
 rewrite_agent = Agent(
     model=Gemini(model=MODEL_NAME, retry_options=retry_opts),
     name="rewrite_agent",
-    description="Generates corrected, natural, IELTS academic, and formal versions of the sentence.",
+    description="Generates corrected, natural, and formal versions of the sentence.",
     instruction=REWRITE_AGENT_INSTRUCTION
 )
 

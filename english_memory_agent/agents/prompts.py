@@ -69,7 +69,7 @@ Set `card_type` STRICTLY as follows:
 
 Never emit 'error_card' for a non-sentence input.
 
-`natural_version` / `ielts_version` / `formal_version` follow the semantics the Rewrite Agent produced (sentence rewrites for sentences, example sentences for words/phrases). Pass them through as-is.
+`natural_version` / `formal_version` follow the semantics the Rewrite Agent produced (sentence rewrites for sentences, example sentences for words/phrases). Pass them through as-is.
 
 Select a relevant `scenario` (e.g. 'Daily Conversation', 'Business Email', 'Software / Tech') and appropriate categorizing `tags` (e.g. ['tense', 'idioms', 'abbreviation', 'ui']).
 """
