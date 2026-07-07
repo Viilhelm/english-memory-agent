@@ -1,3 +1,11 @@
+"""Definitions of the five specialized Gemini sub-agents.
+
+Each agent is a single-responsibility LLM step used as a node inside the
+workflow graph in agent.py. The router and organizer enforce structured
+output via Pydantic schemas (so downstream nodes can branch on typed fields);
+the middle agents (correction, rewrite, explanation) return free text that
+the organizer aggregates into a memory card.
+"""
 import os
 from google.adk.agents import Agent
 from google.adk.models import Gemini

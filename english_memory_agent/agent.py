@@ -1,3 +1,12 @@
+"""ADK 2.0 Workflow graph for the English Memory Agent.
+
+Wires the specialized sub-agents (router, correction, rewrite, explanation,
+organizer) and the local tools (SQLite CRUD, privacy scan, quiz generation)
+into a single graph: the router node classifies user intent and the graph
+edges dispatch to the matching flow node. The analysis branch ends in a
+human-in-the-loop approval step (RequestInput) so nothing is persisted
+without explicit user confirmation.
+"""
 import os
 
 if os.environ.get("GOOGLE_GENAI_USE_ENTERPRISE", "").lower() == "true":
@@ -9,8 +18,6 @@ from google.adk import Workflow, Event, Context
 from google.adk.events import RequestInput
 from google.adk.apps import App
 from google.adk.workflow import node
-from google.adk.models import Gemini
-from google.genai import types
 
 from english_memory_agent.agents import (
     router_agent,
@@ -141,9 +148,6 @@ async def save_decision_node(ctx: Context, node_input: str):
 @node
 async def search_flow_node(ctx: Context, node_input: RouterIntent):
     """Searches memory database."""
-    intent = ctx.state.get("intent", "")
-    if intent != "search_memory":
-        return Event(message="Skipping search flow: intent is not search_memory.")
     query = ctx.state.get("search_query")
     results = search_cards(query)
     return Event(output=results, message=f"Found {len(results)} matching cards.")
@@ -154,6 +158,10 @@ async def review_flow_node(ctx: Context, node_input: RouterIntent):
     """Generates review quiz questions."""
     cards = list_recent_cards(limit=50)
     quiz = generate_review_quiz_from_cards(cards)
+    # Cap the conversational (ADK Web / CLI) output at 10 questions; the
+    # Streamlit UI calls the quiz tool directly and applies its own slider limit.
+    quiz["questions"] = quiz["questions"][:10]
+    quiz["total_questions"] = len(quiz["questions"])
     return Event(output=quiz)
 
 # 7. Delete Node

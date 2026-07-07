@@ -1,3 +1,10 @@
+"""SQLite persistence layer for memory cards.
+
+All access uses short-lived connections (open, execute, close) so the module
+stays safe under Streamlit's per-click rerun model and concurrent MCP tool
+calls. Table creation lives in schema.sql; additive column changes are
+applied by the idempotent migrations in _run_column_migrations.
+"""
 import os
 import sqlite3
 
