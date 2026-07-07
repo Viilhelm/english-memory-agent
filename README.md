@@ -11,6 +11,32 @@ This project is fully compliant with the official **Agents CLI / ADK 2.0 Starter
 
 ---
 
+## Live Demo
+
+Try the deployed Streamlit app here:
+
+https://viilhelm-english-memory-agent-app-yszhgg.streamlit.app/
+
+If the live demo is temporarily unavailable, the project can be run locally using the setup instructions below.
+
+## Problem Statement
+
+Chinese-native English learners often collect useful English expressions from conversations, IELTS practice, emails, online materials, and AI chats. However, these expressions are usually scattered across notes, screenshots, and chat histories. Learners may understand an expression once, but later they cannot easily find it, reuse it, or know how to say it more naturally or formally.
+
+This project addresses the need for a personal English learning memory system that combines correction, explanation, rewriting, privacy control, and long-term review in one workflow.
+
+## Solution
+
+English Memory Agent turns everyday English inputs into structured, searchable, and reviewable memory cards. The system analyzes a word, phrase, sentence, or paragraph, corrects mistakes, generates natural and formal alternatives, explains the usage in Chinese, scans for privacy risks, and saves the result only after human approval.
+
+Saved cards can later be searched, listed, deleted, or used to generate review quizzes. This creates a complete learning loop from input analysis to long-term memory and review.
+
+## Demo and Architecture Images
+
+The project includes an agent workflow diagram and demo screenshots showing the deployed Streamlit dashboard, English analysis flow, human approval step, memory card saving, search, and review quiz features.
+
+---
+
 ## Capstone Concepts Demonstrated
 
 1. **Google ADK (Agent Development Kit) 2.0**:

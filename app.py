@@ -560,89 +560,58 @@ with tab1:
             card_type = safe_str(res.get("card_type", "expression_card"))
             card_type_display = card_type.replace('_', ' ').title()
             
-            # Bento Grid
+            # Layout: core learning content first (left), examples + metadata (right),
+            # long-form explanation full width, privacy folded into the save decision.
             col1, col2 = st.columns(2)
-            
+
             with col1:
-                # 1. Metadata Card
-                details_html = f"""
-                <div class="bento-card">
-                    <div class="bento-header">Card details</div>
-                    <div class="bento-content">
-                        <p><strong>Card Type:</strong> <span class="badge">{card_type_display}</span></p>
-                """
-                if card_type == "error_card":
-                    err_type = res.get('error_type')
-                    if err_type:
-                        details_html += f'<p><strong>Error Type:</strong> <span class="badge badge-orange">{err_type}</span></p>'
-                elif card_type == "word_card":
-                    pos = res.get('part_of_speech')
-                    if pos:
-                        details_html += f'<p><strong>Part of Speech:</strong> <span class="badge badge-sec">{pos}</span></p>'
-                    definition = res.get('definition')
-                    if definition:
-                        details_html += f'<p><strong>Definition:</strong> {safe_str(definition)}</p>'
-                elif card_type == "expression_card":
-                    key_expr = res.get('key_expression')
-                    if key_expr:
-                        details_html += f'<p><strong>Key Expression:</strong> <code>{safe_str(key_expr)}</code></p>'
-                        
-                details_html += f'<p><strong>Scenario:</strong> {safe_str(res.get("scenario"))}</p>'
-                
-                tags_val = res.get("tags")
-                if isinstance(tags_val, list):
-                    tags_str = ", ".join(safe_str(t) for t in tags_val)
-                else:
-                    tags_str = safe_str(tags_val)
-                if tags_str:
-                    details_html += f'<p><strong>Tags:</strong> {", ".join([f"<span class=\"badge badge-gray\">{t.strip()}</span>" for t in tags_str.split(",") if t.strip()])}</p>'
-                    
-                details_html += """
-                    </div>
-                </div>
-                """
-                st.markdown(details_html, unsafe_allow_html=True)
-                
-                # 2. Input/Correction Card
+                # 1. Main result: correction contrast, or the expression being learned
                 if card_type == "error_card":
                     corrected = res.get('corrected_version') or "No correction needed"
-                    correction_html = f"""
+                    err_type = res.get('error_type')
+                    err_html = f'<p style="margin-top: 12px; margin-bottom: 0;"><strong>Error type:</strong> <span class="badge badge-orange">{err_type}</span></p>' if err_type else ""
+                    main_html = f"""
                     <div class="bento-card">
                         <div class="bento-header">Correction</div>
                         <div class="bento-content">
                             <span class="kicker">Original input</span>
                             <div class="original-box">{safe_str(st.session_state.original_text)}</div>
                             <span class="kicker">Corrected version</span>
-                            <div class="corrected-box">{safe_str(corrected)}</div>
+                            <div class="corrected-box">{safe_str(corrected)}</div>{err_html}
                         </div>
                     </div>
                     """
                 else:
-                    correction_html = f"""
+                    key_expr = safe_str(res.get('key_expression'))
+                    pos_html = ""
+                    if card_type == "word_card":
+                        pos = res.get('part_of_speech')
+                        if pos:
+                            pos_html = f'<span class="badge badge-sec">{pos}</span>'
+                    definition = safe_str(res.get('definition'))
+                    def_html = f'<p style="margin-top: 12px; margin-bottom: 0; color: #475569;">{definition}</p>' if definition else ""
+                    if key_expr:
+                        main_header = "Word" if card_type == "word_card" else "Key expression"
+                        expr_size = "1.35rem" if len(key_expr) <= 60 else "1.05rem"
+                        expr_html = f'<div style="font-size: {expr_size}; font-weight: 600; color: #1E293B; margin-bottom: 8px;">{key_expr}</div>'
+                    else:
+                        # No key expression extracted (e.g. rewrite cards): anchor the
+                        # rewrites on the right by showing the sentence they rewrite.
+                        main_header = "Your sentence"
+                        expr_html = f'<div class="original-box" style="border-left-color: #2563EB; font-size: 1.05rem; font-weight: 500; margin-bottom: 0;">{safe_str(st.session_state.original_text)}</div>'
+                    main_html = f"""
                     <div class="bento-card">
-                        <div class="bento-header">Input expression</div>
-                        <div class="bento-content">
-                            <div class="original-box" style="border-left-color: #2563EB; font-size: 1.05rem; font-weight: 500;">{safe_str(st.session_state.original_text)}</div>
-                        </div>
+                        <div class="bento-header">{main_header}</div>
+                        <div class="bento-content">{expr_html}{pos_html}{def_html}</div>
                     </div>
                     """
-                st.markdown(correction_html, unsafe_allow_html=True)
-                
-                # 3. Chinese Explanation Card
-                explanation = res.get("chinese_explanation") or "无解析内容。"
-                explanation_html = f"""
-                <div class="bento-card">
-                    <div class="bento-header">中文解析 · Chinese explanation</div>
-                    <div class="bento-content explanation-box">{explanation}</div>
-                </div>
-                """
-                st.markdown(explanation_html, unsafe_allow_html=True)
-                
+                st.markdown(main_html, unsafe_allow_html=True)
+
             with col2:
-                # 4. Rewrites Card
+                # 2. Rewrites / example sentences
                 natural = safe_str(res.get('natural_version'))
                 formal = safe_str(res.get('formal_version'))
-                header_text = "Example Sentences" if card_type in ("word_card", "expression_card") else "Alternative Rewrites"
+                header_text = "Example sentences" if card_type in ("word_card", "expression_card") else "Alternative rewrites"
 
                 rewrites_html = f"""
                 <div class="bento-card">
@@ -660,46 +629,54 @@ with tab1:
                 </div>
                 """
                 st.markdown(rewrites_html, unsafe_allow_html=True)
-                
-                # 5. Privacy Results Card
-                if p_res:
-                    safe = p_res["safe_to_save"]
-                    status_text = "Safe (No sensitive data detected)" if safe else "Sensitive information flagged!"
-                    status_color = "#10B981" if safe else "#EF4444"
-                    bg_color = "#ECFDF5" if safe else "#FEF2F2"
-                    border_color = "#A7F3D0" if safe else "#FCA5A5"
-                    text_color = "#065F46" if safe else "#991B1B"
-                    
-                    risks_html = ""
-                    if not safe:
-                        risks_html = "<ul>"
-                        for r in p_res["risks"]:
-                            risks_html += f"<li>{r}</li>"
-                        risks_html += "</ul>"
-                        
-                    privacy_html = f"""
-                    <div class="bento-card">
-                        <div class="bento-header">Privacy scan</div>
-                        <div class="bento-content">
-                            <div style="background-color: {bg_color}; border: 1px solid {border_color}; border-radius: 6px; padding: 12px; color: {text_color}; font-weight: 500; display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                <span style="font-weight: 700;">{"✓" if safe else "!"}</span> {status_text}
-                            </div>{risks_html}
-                        </div>
+
+                # 3. Compact metadata: type, scenario, tags
+                tags_val = res.get("tags")
+                if isinstance(tags_val, list):
+                    tags_str = ", ".join(safe_str(t) for t in tags_val)
+                else:
+                    tags_str = safe_str(tags_val)
+                tags_html = ""
+                if tags_str:
+                    chips = " ".join(f'<span class="badge badge-gray">{t.strip()}</span>' for t in tags_str.split(",") if t.strip())
+                    tags_html = f'<p style="margin-bottom: 0;"><strong>Tags:</strong> {chips}</p>'
+                details_html = f"""
+                <div class="bento-card">
+                    <div class="bento-header">Card details</div>
+                    <div class="bento-content" style="font-size: 0.9rem;">
+                        <p><strong>Type:</strong> <span class="badge">{card_type_display}</span></p>
+                        <p><strong>Scenario:</strong> {safe_str(res.get("scenario"))}</p>{tags_html}
                     </div>
-                    """
-                    st.markdown(privacy_html, unsafe_allow_html=True)
-                    
-                # 6. Raw card data (developer view, collapsed by default)
-                with st.expander("Raw card data (JSON)", expanded=False):
-                    st.json(res)
-                
-            # 2. HITL Approval Step
+                </div>
+                """
+                st.markdown(details_html, unsafe_allow_html=True)
+
+            # 4. Chinese explanation, full width (usually the longest content)
+            explanation = res.get("chinese_explanation") or "无解析内容。"
+            explanation_html = f"""
+            <div class="bento-card">
+                <div class="bento-header">中文解析 · Chinese explanation</div>
+                <div class="bento-content explanation-box">{explanation}</div>
+            </div>
+            """
+            st.markdown(explanation_html, unsafe_allow_html=True)
+
+            # 5. Save decision, with the privacy scan result folded in as a status line
             st.markdown("---")
             if st.session_state.approval_requested:
-                banner_html = """
+                privacy_status_html = ""
+                if p_res:
+                    if p_res["safe_to_save"]:
+                        privacy_status_html = """
+                    <div style="margin-top: 12px; background-color: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 6px; padding: 10px 12px; color: #065F46; font-size: 0.85rem; font-weight: 500;"><span style="font-weight: 700;">&#10003;</span> Privacy scan passed — no sensitive data detected</div>"""
+                    else:
+                        risks_html = "".join(f"<li>{r}</li>" for r in p_res["risks"])
+                        privacy_status_html = f"""
+                    <div style="margin-top: 12px; background-color: #FEF2F2; border: 1px solid #FCA5A5; border-radius: 6px; padding: 10px 12px; color: #991B1B; font-size: 0.85rem; font-weight: 500;"><span style="font-weight: 700;">!</span> Sensitive information flagged — review before saving<ul style="margin: 8px 0 0 0;">{risks_html}</ul></div>"""
+                banner_html = f"""
                 <div class="hitl-banner">
                     <div class="hitl-title">Save this memory card?</div>
-                    <div class="hitl-body">Review the analysis above, then save this card to your collection — or discard it.</div>
+                    <div class="hitl-body">Review the analysis above, then save this card to your collection — or discard it.</div>{privacy_status_html}
                 </div>
                 """
                 st.markdown(banner_html, unsafe_allow_html=True)
@@ -729,6 +706,10 @@ with tab1:
                         st.session_state.analysis_result = None
                         st.session_state.approval_requested = False
                         st.rerun()
+
+            # 6. Raw card data (developer view, collapsed by default)
+            with st.expander("Raw card data (JSON)", expanded=False):
+                st.json(res)
 
 
 # ------------------ Tab 2: Search Memory ------------------
