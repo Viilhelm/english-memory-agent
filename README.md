@@ -21,19 +21,30 @@ If the live demo is temporarily unavailable, the project can be run locally usin
 
 ## Problem Statement
 
-Chinese-native English learners often collect useful English expressions from conversations, IELTS practice, emails, online materials, and AI chats. However, these expressions are usually scattered across notes, screenshots, and chat histories. Learners may understand an expression once, but later they cannot easily find it, reuse it, or know how to say it more naturally or formally.
+Many Chinese-native English learners face three practical problems.
 
-This project addresses the need for a personal English learning memory system that combines correction, explanation, rewriting, privacy control, and long-term review in one workflow.
+First, they can understand English expressions temporarily but fail to reuse them later. Useful expressions are often saved in random notebooks, chat logs, or screenshots, making them hard to retrieve.
+
+Second, learners often do not know the difference between a grammatically correct expression and a natural expression. For example, a sentence may be understandable but still sound unnatural, too direct, or too informal.
+
+Third, existing learning tools often separate correction, explanation, vocabulary management, and review. This creates extra friction. Learners need to copy content between tools instead of having one assistant that can analyze, explain, save, and review expressions in one workflow.
+
+English Memory Agent solves this by acting as a personal learning concierge. It guides the user from input analysis to correction, explanation, memory creation, privacy checking, human approval, and long-term review.
 
 ## Solution
 
-English Memory Agent turns everyday English inputs into structured, searchable, and reviewable memory cards. The system analyzes a word, phrase, sentence, or paragraph, corrects mistakes, generates natural and formal alternatives, explains the usage in Chinese, scans for privacy risks, and saves the result only after human approval.
+The system provides a complete learning-memory loop:
 
-Saved cards can later be searched, listed, deleted, or used to generate review quizzes. This creates a complete learning loop from input analysis to long-term memory and review.
+1. The user enters an English word, phrase, sentence, or paragraph.
+2. A router agent identifies the user’s intent.
+3. Specialized agents correct the input, rewrite it into natural and formal versions, and explain the expression in Chinese.
+4. The organizer creates a structured memory card.
+5. A privacy scan checks whether the content contains sensitive information.
+6. The user reviews the generated card and decides whether to save it.
+7. Approved cards are stored in a local SQLite database.
+8. The user can search, list, delete, or generate review quizzes from saved cards.
 
-## Demo and Architecture Images
-
-The project includes an agent workflow diagram and demo screenshots showing the deployed Streamlit dashboard, English analysis flow, human approval step, memory card saving, search, and review quiz features.
+This design makes agents central to the project. The system is not just a prompt wrapper. It uses a graph workflow, multiple specialized agents, custom tools, local persistence, privacy controls, and human-in-the-loop decision making.
 
 ---
 
