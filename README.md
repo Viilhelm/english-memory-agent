@@ -19,6 +19,8 @@ https://viilhelm-english-memory-agent-app-yszhgg.streamlit.app/
 
 If the live demo is temporarily unavailable, the project can be run locally using the setup instructions below.
 
+---
+
 ## Problem Statement
 
 Many Chinese-native English learners face three practical problems.
@@ -30,6 +32,8 @@ Second, learners often do not know the difference between a grammatically correc
 Third, existing learning tools often separate correction, explanation, vocabulary management, and review. This creates extra friction. Learners need to copy content between tools instead of having one assistant that can analyze, explain, save, and review expressions in one workflow.
 
 English Memory Agent solves this by acting as a personal learning concierge. It guides the user from input analysis to correction, explanation, memory creation, privacy checking, human approval, and long-term review.
+
+---
 
 ## Solution
 
