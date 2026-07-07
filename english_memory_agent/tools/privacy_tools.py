@@ -1,6 +1,14 @@
+"""Rule-based PII detection used as a pre-save gate for memory cards.
+
+Runs entirely locally (regex + checksums, no LLM call) so scans are
+deterministic and never send potentially sensitive text to an external
+service. Number-like matches are validated with real checksums (Luhn for
+credit cards, the national ID check digit) to keep false positives low.
+"""
 import re
 
 def luhn_checksum(card_number: str) -> bool:
+    """Returns True if the digit string passes the Luhn check (i.e. is shaped like a valid card number)."""
     try:
         digits = [int(c) for c in card_number]
     except ValueError:
@@ -14,6 +22,7 @@ def luhn_checksum(card_number: str) -> bool:
     return checksum % 10 == 0
 
 def verify_cn_id(id_str: str) -> bool:
+    """Returns True if the 18-character string carries a valid Chinese national ID check digit."""
     if len(id_str) != 18:
         return False
     if not id_str[:17].isdigit():

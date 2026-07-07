@@ -1,3 +1,9 @@
+"""MCP server exposing the English Memory Agent's SQLite storage as tools.
+
+Lets external MCP clients (Claude Desktop, Cursor, ...) save, search, list,
+delete, and quiz over memory cards without going through the ADK workflow.
+Card saves still pass through the same privacy_scan gate as the agent path.
+"""
 import os
 import json
 from mcp.server.fastmcp import FastMCP
@@ -39,7 +45,7 @@ def save_memory_card(
 
     Args:
         card_type: Must be 'error_card', 'rewrite_card', 'expression_card', or 'word_card'.
-        original_text: The original raw sentence input.
+        original_input: The original raw sentence input.
         corrected_version: Grammatically corrected sentence (for error cards).
         natural_version: Conversational daily rewrite (sentence) or natural example sentence (word/phrase).
         formal_version: Formal workplace rewrite (sentence) or formal example sentence (word/phrase).
